@@ -117,11 +117,15 @@
         prop="title"
         :show-overflow-tooltip="true"
       ></el-table-column>
+
       <el-table-column label="产品分类" width="100px" align="center">
         <template slot-scope="scope">
           <span>{{ formatType(scope.row.productType) }}</span>
+          <span>{{ formatType(scope.row.productType) }}</span>
+          <span>{{ formatType(scope.row.productType) }}</span>
         </template>
       </el-table-column>
+
       <el-table-column
         label="总访客量（UV）"
         width="100"
