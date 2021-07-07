@@ -68,7 +68,7 @@ module.exports = {
           trigger: "axis",
         },
         xAxis: {
-          type: "time",
+          type: "category",
           axisTick: {
             alignWithLabel: true,
           },
