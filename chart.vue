@@ -265,8 +265,8 @@ module.exports = {
         ],
       },
       // myChart实例
-      userChart: {},
-      newUserChart: {},
+      userChart: null,
+      newUserChart: null,
       tableList: [
         ["今天", 10, 23, 45, 23, 432, 23, 12, 34, 675],
         ["昨天", 10, 23, 45, 23, 432, 23, 12, 34, 675],
@@ -277,23 +277,56 @@ module.exports = {
       ],
       submitParam: {
         type: "所有用户",
-        date1: "",
-        date2: "",
+        user: [
+          {
+            isNew: "user",
+            startTime: "",
+            endTime: "",
+          },
+          {
+            isNew: "newUser",
+            startTime: "",
+            endTime: "",
+          },
+        ],
       },
     }
   },
   mounted() {
-    this.setEchart()
+    const end = new Date()
+    const start = new Date()
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+    this.value1 = this.value2 = [start, end]
+
+    this.submitParam.user = [
+      {
+        isNew: "user",
+        startTime: start,
+        endTime: end,
+      },
+      {
+        isNew: "newUser",
+        startTime: start,
+        endTime: end,
+      },
+    ]
+    //1.请求图表数据
+    //2.画图
+    this.getChartList()
 
     this.getAllTableList()
   },
   updated() {
-    if (!this.userChart || !this.newUserChart) {
-      this.setEchart()
-    }
-    this.changeChart()
+    this.drawChart()
   },
   methods: {
+    drawChart(type) {
+      if (!this.userChart || !this.newUserChart) {
+        this.setEchart()
+      } else {
+        this.changeChart(type)
+      }
+    },
     setEchart() {
       let user = this.$refs.mychart1
       this.userChart = echarts.init(user)
@@ -303,36 +336,49 @@ module.exports = {
       this.newUserChart = echarts.init(newUser)
       this.newUserChart.setOption(this.option2)
     },
-    changeChart(type) {
-      if (type != "newUser") {
+    changeChart(isNew) {
+      //isNew为undefined 两个图都更新
+      if (isNew != "newUser") {
         this.userChart.setOption(this.option1)
       }
-      if (type != "user") {
+      if (isNew != "user") {
         this.newUserChart.setOption(this.option2)
       }
     },
     radioChange(e) {
       console.log(e)
       console.log(this.submitParam.type)
-      //1、请求拿数据
-      //2、修改option
-      //3、重新绘图
-      // this.changeChart()
+      this.getChartList()
     },
-    dateChange(e) {
-      if (e == "user") {
-        //请求
-        //this.value1是数组储存startTime,endTime; moment(endTime).format("yyyy-MM-dd")
-        // var endTime = moment(this.value1[1]).format("yyyy-MM-dd")
-        //axios.get(date:this.value1).then(res=>{})
-        // 返回数据更改option1
-        //再画一遍图
-        // this.changeChart(e)
-      } else {
-        // e=="newUser"
-      }
-      console.log(e)
+    dateChange(isNew) {
+      console.log(isNew)
       console.log(this.value1, this.value2)
+      if (isNew == "user") {
+        //this.value1是数组储存startTime,endTime; moment(endTime).format("yyyy-MM-dd")
+        this.submitParam.user[0].startTime = moment(this.value1[0]).format(
+          "yyyy-MM-dd"
+        )
+        this.submitParam.user[0].endTime = moment(this.value1[1]).format(
+          "yyyy-MM-dd"
+        )
+      } else {
+        // isNew=="newUser"
+        //this.value1是数组储存startTime,endTime; moment(endTime).format("yyyy-MM-dd")
+        this.submitParam.user[1].startTime = moment(this.value2[0]).format(
+          "yyyy-MM-dd"
+        )
+        this.submitParam.user[1].endTime = moment(this.value2[1]).format(
+          "yyyy-MM-dd"
+        )
+      }
+      this.getChartList(isNew)
+    },
+    getChartList(isNew) {
+      // this.submitParam
+      //axios.get(this.submitParam).then(res=>{})
+      // 返回数据更改option1
+      //再画一遍图
+      this.drawChart(isNew)
     },
     getAllTableList() {
       //请求一览表数据
