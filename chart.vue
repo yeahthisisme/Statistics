@@ -240,9 +240,10 @@ module.exports = {
         yAxis: [
           {
             type: "value",
-          },
-          {
-            type: "value",
+            axisLine: {
+              symbol: ["none", "arrow"],
+              symbolOffset: [10, 10],
+            },
           },
         ],
         series: [
@@ -283,8 +284,8 @@ module.exports = {
   },
   mounted() {
     this.setEchart()
-    
-    this.getAllTableList();
+
+    this.getAllTableList()
   },
   updated() {
     if (!this.userChart || !this.newUserChart) {
@@ -333,10 +334,10 @@ module.exports = {
       console.log(e)
       console.log(this.value1, this.value2)
     },
-    getAllTableList(){
+    getAllTableList() {
       //请求一览表数据
       //修改tableList
-    }
+    },
   },
 }
 </script>
@@ -385,9 +386,10 @@ module.exports = {
 }
 .table {
   display: table;
-  width: 1000px;
+  width: 980px;
   border-collapse: collapse;
   margin-top: 40px;
+  margin-left: 60px;
 }
 .table * {
   margin: 0 auto;
