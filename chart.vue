@@ -3,9 +3,11 @@
     <div class="align-center">
       <div class="left">数据分析</div>
       <div style="width: 50px"></div>
-      <el-button size="small" plain>所有用户</el-button>
-      <el-button size="small" plain>零售商</el-button>
-      <el-button size="small" plain>其他用户</el-button>
+      <el-radio-group v-model="submitParam.type" @change="radioChange">
+        <el-radio-button size="small" label="所有用户"></el-radio-button>
+        <el-radio-button size="small" label="零售商"></el-radio-button>
+        <el-radio-button size="small" label="其他用户"></el-radio-button>
+      </el-radio-group>
     </div>
     <div class="space-around wrapper">
       <div>
@@ -19,7 +21,8 @@
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            change="chartChange(1)"
+            :editable="false"
+            @change="dateChange('user')"
           >
           </el-date-picker>
         </div>
@@ -35,7 +38,8 @@
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            change="chartChange(2)"
+            :editable="false"
+            @change="dateChange('newUser')"
           >
           </el-date-picker>
         </div>
@@ -270,16 +274,23 @@ module.exports = {
         ["总计", 10, 23, 45, 23, 432, 23, 12, 34, 675],
         ["自定义时间", 10, 23, 45, 23, 432, 23, 12, 34, 675],
       ],
+      submitParam: {
+        type: "所有用户",
+        date1: "",
+        date2: "",
+      },
     }
   },
   mounted() {
     this.setEchart()
+    
+    this.getAllTableList();
   },
   updated() {
-    if (!this.myChart) {
+    if (!this.userChart || !this.newUserChart) {
       this.setEchart()
     }
-    this.chartChange()
+    this.changeChart()
   },
   methods: {
     setEchart() {
@@ -291,14 +302,41 @@ module.exports = {
       this.newUserChart = echarts.init(newUser)
       this.newUserChart.setOption(this.option2)
     },
-    chartChange(type) {
-      if (type != 2) {
+    changeChart(type) {
+      if (type != "newUser") {
         this.userChart.setOption(this.option1)
       }
-      if (type != 1) {
+      if (type != "user") {
         this.newUserChart.setOption(this.option2)
       }
     },
+    radioChange(e) {
+      console.log(e)
+      console.log(this.submitParam.type)
+      //1、请求拿数据
+      //2、修改option
+      //3、重新绘图
+      // this.changeChart()
+    },
+    dateChange(e) {
+      if (e == "user") {
+        //请求
+        //this.value1是数组储存startTime,endTime; moment(endTime).format("yyyy-MM-dd")
+        // var endTime = moment(this.value1[1]).format("yyyy-MM-dd")
+        //axios.get(date:this.value1).then(res=>{})
+        // 返回数据更改option1
+        //再画一遍图
+        // this.changeChart(e)
+      } else {
+        // e=="newUser"
+      }
+      console.log(e)
+      console.log(this.value1, this.value2)
+    },
+    getAllTableList(){
+      //请求一览表数据
+      //修改tableList
+    }
   },
 }
 </script>
