@@ -121,8 +121,6 @@
       <el-table-column label="产品分类" width="100px" align="center">
         <template slot-scope="scope">
           <span>{{ formatType(scope.row.productType) }}</span>
-          <span>{{ formatType(scope.row.productType) }}</span>
-          <span>{{ formatType(scope.row.productType) }}</span>
         </template>
       </el-table-column>
 
@@ -197,7 +195,7 @@
         ></el-table-column>
         <el-table-column label="身份" width="100px" align="center">
           <template slot-scope="scope">
-            <span>{{ formatType(scope.row.productType) }}</span>
+            <span>{{ formatType(scope.row.peopleType) }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -215,7 +213,14 @@
         </el-table-column>
       </el-table>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="open = false">关 闭</el-button>
+        <el-pagination
+          :current-page.sync="currentPage"
+          :page-size.sync="pageSize"
+          :layout="layout"
+          :page-sizes="pageSizes"
+          :total="total"
+          @current-change="handleCurrentChange"
+        />
       </div>
     </el-dialog>
   </div>
@@ -242,6 +247,7 @@ module.exports = {
           img: "https://youlala.oss-accelerate.aliyuncs.com/lihaoaapp/2021/07/02/eadb78e3-5911-477e-9994-2413c4e15f9ajpg?t=1625208263431",
           title: "桂林3天2晚桂林3天2晚桂林3天2晚",
           productType: 3,
+          peopleType: 3,
           totalUv: 322,
           uv: 234,
           pv: 1134,
@@ -252,6 +258,7 @@ module.exports = {
           img: "https://youlala.oss-accelerate.aliyuncs.com/lihaoaapp/2021/05/18/913dae86-b084-48d5-b716-eed9bab48b10jpg?t=1621326254358",
           title: "桂林3天2晚",
           productType: 3,
+          peopleType: 3,
           totalUv: 142,
           uv: 34,
           pv: 555,
@@ -332,7 +339,7 @@ module.exports = {
         pageSize: 10,
         title: undefined,
         operName: undefined,
-        productType: undefined,
+        peopleType: undefined,
       },
     }
   },
@@ -340,6 +347,9 @@ module.exports = {
     this.getList()
   },
   methods: {
+    formatType(){
+
+    },
     indexMethods(index) {
       // currentpage当前页码，this.list.length总条数，index索引值
       if (this.list.length < 10) {
@@ -351,7 +361,7 @@ module.exports = {
     /** 查询登录日志 */
     getList() {
       this.loading = true
-      // this.total = response.total;
+      this.total = this.list.length
       this.loading = false
     },
     formatType(value) {
