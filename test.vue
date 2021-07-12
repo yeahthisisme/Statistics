@@ -41,8 +41,7 @@ module.exports = {
   methods: {
     moment,
     dateChange(e){
-      // console.log(e)
-      // console.log(this.date)
+
     }
   },
 }
